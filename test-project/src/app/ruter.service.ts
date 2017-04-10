@@ -20,28 +20,51 @@ export class RuterService {
 
   private jernbanetorgetUrl = 'http://reisapi.ruter.no/StopVisit/GetDepartures/' + this.id;
 
+  private stops: Stop[];
 
   private headers = new Headers({'Accept': 'application/json'});
 
   constructor(private http: Http) { }
 
-  getStation(): Observable<Object> {
-    return this.http.get(this.jernbanetorgetUrl, {headers: this.headers})
-                    .map(this.extractData)
+  getStation(name: string): Promise<Object> {
+
+    const id = this.getStationId(name);
+
+    return this.http.get(this.ruterUrl + 'StopVisit/GetDepartures/' + id, {headers: this.headers})
+                    .toPromise()
+                    .then(response => response.json())
                     .catch(this.handleError);
 
       // .then(response => response.json().destinationDi as String[])
 
   }
 
+  getStationId(name: string): number {
+    for (let i = 0; i < this.stops.length; i++) {
+      if (this.stops[i].name === name) {
+        return this.stops[i].id;
+      }
+    }
+  }
+
   getAllStops(): Promise<Stop[]> {
-    this.ruterUrl = this.ruterUrl + 'Place/GetStopsRuter';
-    return this.http.get(this.ruterUrl, {headers: this.headers})
+    return this.http.get(this.ruterUrl + 'Place/GetStopsRuter', {headers: this.headers})
                     .toPromise()
                     .then(response => response.json())
                     .catch(this.handleError);
   }
 
+  getAllStops2(): void {
+    this.http.get(this.ruterUrl + 'Place/GetStopsRuter', {headers: this.headers})
+                    .toPromise()
+                    .then(response => this.stops = response.json())
+                    .catch(this.handleError);
+  }
+
+  getAllStops3(): Stop[] {
+    return this.stops;
+  }
+/*
   private extractData(res: Response) {
     const body = res.json().this.toStops;
 
@@ -56,14 +79,7 @@ export class RuterService {
 
     return stop;
   }
-
-
-
-
-
-
-
-
+  */
   private handleError(error: Response | any) {
         // In a real world app, you might use a remote logging infrastructure
     let errMsg: string;

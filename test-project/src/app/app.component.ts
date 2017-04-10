@@ -21,8 +21,19 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    /*
+    this.ruterService
+        .getAllStops2();
+    this.stops = this.ruterService.getAllStops3();
+/*
+    */
     this.ruterService
         .getAllStops()
-        .then(data => this.stops = data);
+        .then(response => this.stops = response);
+/*
+    this.ruterService
+        .getStation('Forskningsparken')
+        .then(data => this.testString = JSON.stringify(data));
+        */
   }
 }

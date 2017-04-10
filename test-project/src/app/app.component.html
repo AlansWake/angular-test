@@ -1,3 +1,11 @@
 <h1>
   {{title}}
+
 </h1>
+
+<div *ngFor="let stop of stops">
+  <div *ngIf="stop.District == 'Oslo'">
+    {{stop.Name}}
+    {{stop.ID}}
+  </div>
+</div>
